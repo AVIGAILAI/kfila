@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta property="og:title" content="הכפילה הדיגיטלית שלך">
+<meta property="og:description" content="מדריך חינם: איך יוצרים כפילה דיגיטלית שמדברת בקול שלך, עם HeyGen ו-Claude">
+<title>הכפילה הדיגיטלית שלך</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;900&display=swap">
+<style>
+/* Same system as the studio guide: one narrow phone-first column, numbered steps (a real sequence), copyable prompt cards. Single dark brand look. */
+:root{
+  --bg:#0b0a08; --surface:#16140f; --surface2:#1e1a12; --line:rgba(201,168,76,.42);
+  --fg:#f5f2e8; --soft:#d9d4c6; --muted:#a39d8d; --gold:#c9a84c; --gold2:#f2d27a; --red:#c0392b; --ink:#0b0a08;
+  --display:"Rubik","Segoe UI",Arial,sans-serif; --body:"Rubik","Segoe UI",Arial,sans-serif;
+  color-scheme:dark;
+}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.6;margin:0;
+  padding-inline:18px;padding-block:28px 56px;direction:rtl;text-align:right}
+.wrap{max-width:640px;margin-inline:auto;display:flex;flex-direction:column;gap:30px}
+a{color:var(--gold2)}
+.ltr{direction:ltr;unicode-bidi:isolate;white-space:nowrap}
+
+header{display:flex;flex-direction:column;gap:12px;padding-block:8px 4px;
+  background:radial-gradient(120% 90% at 100% 0%, rgba(201,168,76,.16), transparent 60%)}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--gold)}
+h1{font-family:var(--display);font-weight:900;font-size:clamp(34px,9vw,52px);line-height:1.05;margin:0;text-wrap:balance}
+h1 em{font-style:normal;color:var(--gold)}
+.lead{color:var(--soft);margin:0;max-width:60ch}
+.handle{font-size:14px;color:var(--muted);text-decoration:none}
+.rec{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;font-size:14px;font-weight:700;color:var(--muted);
+  border:1px solid var(--line);border-radius:99px;padding:5px 14px}
+.rec i{width:10px;height:10px;border-radius:50%;background:var(--red);display:block}
+.rec s{text-decoration-color:var(--red);text-decoration-thickness:2px}
+
+.box{border:1px solid var(--line);border-radius:16px;background:linear-gradient(135deg, rgba(201,168,76,.12), rgba(255,255,255,.02));
+  padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.box .lbl{font-size:13px;font-weight:700;color:var(--gold);letter-spacing:.03em}
+.box p{color:var(--soft)}
+.box strong{color:var(--gold2)}
+
+.step{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start}
+.num{width:44px;height:44px;border-radius:50%;background:var(--gold);color:var(--ink);font-weight:900;font-size:20px;display:grid;place-items:center}
+.step > div{min-width:0;display:flex;flex-direction:column;gap:12px}
+h2{font-family:var(--display);font-size:23px;font-weight:900;margin:6px 0 0;line-height:1.25;text-wrap:balance}
+p{margin:0}
+ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+li{position:relative;padding-right:24px;color:var(--soft)}
+li::before{content:"✓";position:absolute;right:0;color:var(--gold);font-weight:900}
+ul.no li::before{content:"✕";color:#e57b6f}
+.g{color:var(--gold2)}
+
+.skills{display:flex;flex-direction:column;gap:10px}
+.skill{background:var(--surface);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.skill .top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.skill .name{font-weight:700;color:var(--gold2);font-size:17px}
+.tag{font-size:12px;font-weight:700;padding:2px 10px;border-radius:99px;border:1px solid var(--gold);color:var(--gold)}
+.tag.you{background:var(--gold);color:var(--ink)}
+.skill .what{color:var(--soft);font-size:15.5px}
+.skill .src{font-size:13.5px;color:var(--muted);overflow-wrap:anywhere}
+
+.prompt{border:1px solid var(--line);border-radius:16px;background:linear-gradient(135deg, rgba(201,168,76,.12), rgba(255,255,255,.02));
+  padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.prompt .lbl{font-size:13px;font-weight:700;color:var(--gold);letter-spacing:.03em}
+.prompt .txt{color:var(--fg);font-size:16px;overflow-wrap:anywhere}
+.copy{align-self:flex-start;font-family:var(--body);font-weight:700;font-size:14px;background:var(--gold);color:var(--ink);border:0;border-radius:99px;padding:8px 18px;cursor:pointer}
+.copy:focus-visible{outline:3px solid var(--gold2);outline-offset:2px}
+.copy.done{background:var(--surface2);color:var(--gold2)}
+
+.dl{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:10px 16px;text-decoration:none;font-weight:700}
+
+.angle{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.angle figure{margin:0;background:var(--surface);border-radius:14px;padding:12px;text-align:center;min-width:0}
+.angle svg{width:100%;max-width:200px;height:auto;display:block;margin:0 auto 6px}
+.angle figcaption{font-size:14.5px;color:var(--soft)}
+.angle .bad b{color:#e57b6f}
+.angle .good b{color:var(--gold2)}
+
+.tips{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.tip{background:var(--surface);border-radius:14px;padding:14px 16px;color:var(--soft);font-size:15.5px}
+.tip strong{display:block;color:var(--gold2);font-size:16.5px;margin-bottom:2px}
+
+footer{border-top:1px solid var(--line);padding-top:16px;display:flex;flex-direction:column;gap:4px;color:var(--muted);font-size:14px}
+footer strong{color:var(--fg);font-size:16px}
+@media (max-width:420px){ .angle{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:no-preference){ .copy{transition:background .2s} .rec i{animation:blink 1.2s steps(1) infinite} @keyframes blink{50%{opacity:.2}} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="eyebrow">מדריך חינם ✦ כפילה דיגיטלית</span>
+    <h1>הכפילה הדיגיטלית <em>שלך</em></h1>
+    <p class="lead">כפילה שנראית כמוך, מדברת בקול שלך, ומקליטה סרטונים בלי שתעמדי מול המצלמה. כך יצרתי את שלי, צעד אחרי צעד.</p>
+    <span class="rec"><i></i><s>REC</s> הסרטון שראית לא צולם</span>
+    <a class="handle ltr" href="https://www.instagram.com/avigail_naamaddd" target="_blank" rel="noopener">@avigail_naamaddd</a>
+  </header>
+
+  <section class="box">
+    <span class="lbl">מה בעצם עשיתי</span>
+    <p>את כל העבודה עשיתי <strong>בשיחה עם Claude</strong>. חיברתי אותו לחשבון שלי ב-HeyGen, ומשם הוא עשה הכול: בדק את הצילומים, יצר את הכפילה, שיבט את הקול, הפיק את הסרטון וערך אותו.</p>
+    <p><strong>לתוך HeyGen כמעט לא נכנסתי.</strong> רק פעם אחת, כדי לאשר מול המצלמה שזו באמת אני ושאני מסכימה שישתמשו בפנים שלי. את השלב הזה אף אחד לא יכול לעשות במקומך, וטוב שכך.</p>
+  </section>
+
+  <section class="step">
+    <span class="num">1</span>
+    <div>
+      <h2>פותחים חשבונות בשני כלים</h2>
+      <div class="skills">
+        <div class="skill">
+          <div class="top"><span class="name">HeyGen</span><span class="tag">איפה הכפילה גרה</span></div>
+          <span class="what">בונה את הכפילה מהסרטון שלך ומדובב אותה. כדי לשבט קול ולקבל סרטון בלי סימן מים צריך תוכנית בתשלום.</span>
+          <span class="src"><a class="ltr" href="https://www.heygen.com" target="_blank" rel="noopener">heygen.com</a></span>
+        </div>
+        <div class="skill">
+          <div class="top"><span class="name">Claude</span><span class="tag">מי שעושה את העבודה</span></div>
+          <span class="what">מתחבר ל-HeyGen ומבצע את כל השלבים בשבילך. מדברים איתו בעברית רגילה, נותנים הערות, והוא מתקן.</span>
+          <span class="src"><a class="ltr" href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <span class="num">2</span>
+    <div>
+      <h2>מצלמים את סרטון האימון</h2>
+      <p>הכפילה לומדת בדיוק את מה שהיא רואה. צילום טוב הוא רוב התוצאה, וכל פגם בצילום חוזר בכל סרטון שתעשי אחר כך.</p>
+      <div class="angle" role="group" aria-label="זווית המצלמה">
+        <figure class="bad">
+          <svg viewBox="0 0 220 140" aria-hidden="true">
+            <circle cx="150" cy="44" r="22" fill="#16140f" stroke="#a39d8d" stroke-width="3"/>
+            <rect x="128" y="70" width="44" height="58" rx="12" fill="#16140f" stroke="#a39d8d" stroke-width="3"/>
+            <rect x="34" y="104" width="34" height="22" rx="5" fill="#c0392b"/>
+            <path d="M70 108 L132 52" stroke="#c0392b" stroke-width="3" stroke-dasharray="6 6" fill="none"/>
+          </svg>
+          <figcaption><b>מצלמה מלמטה:</b> מדגישה סנטר כפול</figcaption>
+        </figure>
+        <figure class="good">
+          <svg viewBox="0 0 220 140" aria-hidden="true">
+            <circle cx="150" cy="44" r="22" fill="#16140f" stroke="#f2d27a" stroke-width="3"/>
+            <rect x="128" y="70" width="44" height="58" rx="12" fill="#16140f" stroke="#f2d27a" stroke-width="3"/>
+            <rect x="34" y="26" width="34" height="22" rx="5" fill="#c9a84c"/>
+            <path d="M70 38 L128 42" stroke="#c9a84c" stroke-width="3" stroke-dasharray="6 6" fill="none"/>
+          </svg>
+          <figcaption><b>בגובה העיניים או מעט מעל:</b> מחמיא</figcaption>
+        </figure>
+      </div>
+      <ul>
+        <li>טלפון על מעמד, לא ביד. מטר ממך בערך, מהחזה ומעלה, עם קצת מקום מעל הראש</li>
+        <li>אור מלפנים: הפנים מול חלון, לא גב לחלון</li>
+        <li>רקע חלק ורגוע, עדיף כהה. קיר לבן משאיר הילה של אור אם מחליפים רקע</li>
+        <li>2–3 דקות של דיבור טבעי על נושא שאת מכירה. עדיף לדבר חופשי מאשר להקריא</li>
+        <li>בין משפטים: שנייה של שקט עם שפתיים סגורות ורפויות</li>
+        <li>מבט לעדשה ולא למסך. ראש כמעט בלי תזוזה, ידיים למטה</li>
+        <li>איכות 1080p לפחות, ולהעביר את הקובץ המקורי בכבל או ב-Drive. וואטסאפ דוחס את האיכות</li>
+      </ul>
+      <ul class="no">
+        <li>לגלגל עיניים למעלה כשחושבים. הכפילה תעתיק את זה</li>
+        <li>לגעת בפנים או בשיער באמצע הצילום</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step">
+    <span class="num">3</span>
+    <div>
+      <h2>מקליטים את הקול בנפרד</h2>
+      <ul>
+        <li>1–2 דקות באפליקציית הקלטת הקול של הטלפון, קרוב לפה</li>
+        <li>חדר שקט, בטון הרגיל שלך</li>
+        <li>לא דרך וואטסאפ. הודעה קולית דחוסה מדי לשיבוט טוב</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step">
+    <span class="num">4</span>
+    <div>
+      <h2>מחברים את Claude ל-HeyGen</h2>
+      <p>באפליקציית Claude: <span class="g">הגדרות ← Connectors</span>, מוסיפים את HeyGen ומתחברים לחשבון שלך. מחברים פעם אחת, ומשם הוא עובד מול החשבון לבד.</p>
+      <div class="prompt">
+        <span class="lbl">מעתיקים ושולחים ל-Claude, יחד עם שני הקבצים</span>
+        <p class="txt" id="p1">צירפתי סרטון אימון והקלטת קול. לפני שאתה יוצר משהו, תבדוק את הצילום ואת הקול ותגיד לי אם הם מספיק טובים לכפילה טבעית. אם כן, תיצור לי ב-HeyGen כפילה דיגיטלית ותשבט את הקול שלי.</p>
+        <button class="copy" type="button" data-for="p1">העתקה</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <span class="num">5</span>
+    <div>
+      <h2>מאשרים מול המצלמה <span class="tag you">רק את</span></h2>
+      <p>Claude ישלח לך קישור אישור מ-HeyGen. פותחים אותו בדפדפן שמחובר לחשבון, אומרים משפט קצר מול המצלמה, וזהו. זה הרגע היחיד שבו נכנסים ל-HeyGen.</p>
+    </div>
+  </section>
+
+  <section class="step">
+    <span class="num">6</span>
+    <div>
+      <h2>מבקשים את הסרטון</h2>
+      <div class="prompt">
+        <span class="lbl">המשפט שמתחיל את הסרטון</span>
+        <p class="txt" id="p2">תיצור לי סרטון עם הכפילה שלי, בפורמט אנכי לריל, עם הטקסט: [הטקסט שלך]. קודם תשמיע לי משפט אחד בקול, ורק אחרי שאאשר תפיק את כל הסרטון.</p>
+        <button class="copy" type="button" data-for="p2">העתקה</button>
+      </div>
+      <p>ומשם מדייקים יחד: "תדבר קצת יותר מהר", "המילה הזו לא נשמעת נכון", "תתקרב אליי פחות". כמה סבבים קצרים, וזה שלך.</p>
+    </div>
+  </section>
+
+  <section class="tips">
+    <div class="tip"><strong>לא מתמונה אחת</strong>ניסיתי. כפילה מתמונה תמיד נראית מלאכותית. רק סרטון אמיתי נותן תוצאה טבעית.</div>
+    <div class="tip"><strong>משפט אחד קודם</strong>שומעים משפט קצר לפני כל סרטון. מילה שנשמעת לא נכון מתקנים בשנייה.</div>
+    <div class="tip"><strong>בדיקה לפני קרדיטים</strong>מבקשים מ-Claude לבדוק כל צילום לפני שיוצרים ממנו. חוסך ניסיונות כושלים.</div>
+    <div class="tip"><strong>צילום חדש, כפילה חדשה</strong>לא אהבת זווית או תאורה? מצלמים שוב ובונים כפילה חדשה. הקול נשאר אותו קול.</div>
+  </section>
+
+  <footer>
+    <strong>בהצלחה עם הכפילה שלך ✨</strong>
+    <span>יש שאלה? שלחי לי הודעה. ושימי עוקב לעוד תוכן על AI פרקטי לעסקים · <a class="ltr" href="https://www.instagram.com/avigail_naamaddd" target="_blank" rel="noopener">@avigail_naamaddd</a></span>
+  </footer>
+</div>
+
+<script>
+document.querySelectorAll('.copy').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const el = document.getElementById(btn.dataset.for);
+    const done = () => { btn.textContent = 'הועתק ✓'; btn.classList.add('done'); setTimeout(() => { btn.textContent = 'העתקה'; btn.classList.remove('done'); }, 1800); };
+    const fallback = () => { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'מסומן, אפשר להעתיק'; };
+    try { navigator.clipboard.writeText(el.textContent.trim()).then(done, fallback); } catch (e) { fallback(); }
+  });
+});
+</script>
+</body>
+</html>
